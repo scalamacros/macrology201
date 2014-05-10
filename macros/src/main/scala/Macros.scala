@@ -16,9 +16,10 @@ class OptionalMacros(val c: Context) {
   def getOrElse(alt: c.Tree): c.Tree = {
     import c.universe._
     val q"$prefix.$_[..$_](..$args)" = c.macroApplication
+    val temp = c.freshName(TermName("temp"))
     q"""
-      val temp = $prefix
-      if (temp.isEmpty) $alt else temp.value
+      val $temp = $prefix
+      if ($temp.isEmpty) $alt else $temp.value
     """
   }
 }

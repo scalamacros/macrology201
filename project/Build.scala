@@ -35,9 +35,7 @@ object MyBuild extends Build {
     "core",
     file("core"),
     settings = buildSettings ++ Seq(
-      scalacOptions += "-optimize",
-      scalacOptions += "-Xprint:typer",
-      scalacOptions += "-uniqid"
+      scalacOptions += "-optimize"
     )
   ) dependsOn(macros)
 }
