@@ -15,7 +15,7 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
 class OptionalMacros(val c: Context) {
   def getOrElse(alt: c.Tree): c.Tree = {
     import c.universe._
-    println(showCode(c.macroApplication))
-    q"if (isEmpty) $alt else value"
+    val q"$prefix.$_(..$args)" = c.macroApplication
+    q"if ($prefix.isEmpty) $alt else $prefix.value"
   }
 }
