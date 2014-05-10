@@ -7,9 +7,14 @@ import scala.reflect.macros.blackbox.Context
 final class Optional[+A >: Null](val value: A) extends AnyVal {
   def get: A = value
   def isEmpty = value == null
-  // can't seem to coerce the inliner into inlining calls to getOrElse
-  // would be great if you know a way of achieving that!
-  // upd. Thank you, Jason! https://issues.scala-lang.org/browse/SI-8580
-  @inline final def getOrElse[B >: A](alt: => B): B = if (isEmpty) alt else value
+  // @inline final def getOrElse[B >: A](alt: => B): B = if (isEmpty) alt else value
+  def getOrElse[B >: A](alt: => B): B = macro OptionalMacros.getOrElse
   override def toString = if (isEmpty) "<empty>" else s"$value"
+}
+
+class OptionalMacros(val c: Context) {
+  def getOrElse(alt: c.Tree): c.Tree = {
+    import c.universe._
+    q"if (isEmpty) $alt else value"
+  }
 }
