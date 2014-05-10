@@ -1,11 +1,12 @@
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
-object Macros {
-  def impl(c: Context): c.Tree = {
-    import c.universe._
-    q"""println("Hello World")"""
-  }
+// Allocation-free option type for Scala
+// Inspired by https://github.com/arosenberger/nalloc
 
-  def hello: Unit = macro impl
+final class Optional[+A >: Null](val value: A) extends AnyVal {
+  def get: A = value
+  def isEmpty = value == null
+  def getOrElse[B >: A](alt: => B): B = ???
+  override def toString = if (isEmpty) "<empty>" else s"$value"
 }
