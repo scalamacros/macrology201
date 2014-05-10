@@ -12,6 +12,13 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   override def toString = if (isEmpty) "<empty>" else s"$value"
 }
 
+object Optional {
+  def ensuringNotNull[A](x: A): A = {
+    if (x == null) sys.error("argument to Optional.getOrElse can't be null")
+    x
+  }
+}
+
 class OptionalMacros(val c: Context) {
   def getOrElse(alt: c.Tree): c.Tree = {
     import c.universe._
@@ -19,7 +26,7 @@ class OptionalMacros(val c: Context) {
     val temp = c.freshName(TermName("temp"))
     q"""
       val $temp = $prefix
-      if ($temp.isEmpty) $alt else $temp.value
+      if ($temp.isEmpty) Optional.ensuringNotNull($alt) else $temp.value
     """
   }
 }
