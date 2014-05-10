@@ -24,9 +24,10 @@ class OptionalMacros(val c: Context) {
     import c.universe._
     val q"$prefix.$_[..$_](..$args)" = c.macroApplication
     val temp = c.freshName(TermName("temp"))
+    val Optional = q"_root_.Optional"
     q"""
       val $temp = $prefix
-      if ($temp.isEmpty) Optional.ensuringNotNull($alt) else $temp.value
+      if ($temp.isEmpty) $Optional.ensuringNotNull($alt) else $temp.value
     """
   }
 }
