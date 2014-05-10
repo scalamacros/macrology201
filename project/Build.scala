@@ -34,6 +34,8 @@ object MyBuild extends Build {
   lazy val core: Project = Project(
     "core",
     file("core"),
-    settings = buildSettings
+    settings = buildSettings ++ Seq(
+      scalacOptions += "-optimize"
+    )
   ) dependsOn(macros)
 }
