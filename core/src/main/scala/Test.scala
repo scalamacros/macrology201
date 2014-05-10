@@ -2,7 +2,7 @@ class C { override def toString = "C" }
 
 object Test {
   def main(args: Array[String]): Unit = {
-    def x = { println("side-effect!"); new Optional(new C) }
-    println(x.getOrElse(new C))
+    val temp = 100
+    println(new Optional(if (temp < 100) new C else null).getOrElse(new C))
   }
 }
