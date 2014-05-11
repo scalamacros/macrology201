@@ -25,19 +25,22 @@ class OptionalMacros(val c: Context) {
   }
 
   def map(f: c.Tree): c.Tree = {
+    import c.internal._
+    import decorators._
+    val tempSym = enclosingOwner.newTermSymbol(temp).setInfo(prefix.tpe)
+    val tempDef = valDef(tempSym, changeOwner(prefix, enclosingOwner, tempSym))
+
     val q"($inlinee => $body)" = f
-    object inliner extends Transformer {
-      override def transform(tree: Tree): Tree = tree match {
-        case Ident(_) if tree.symbol == inlinee.symbol =>
-          q"$temp"
-        case _ =>
-          super.transform(tree)
-      }
-    }
-    val mapped = inliner.transform(body)
+    val mapped = typingTransform(body)((tree, api) => tree match {
+      case Ident(_) if tree.symbol == inlinee.symbol =>
+        api.typecheck(q"$tempSym.value")
+      case _ =>
+        api.default(tree)
+    })
+
     q"""
-      val $temp = ${splicer(prefix)}
-      if ($temp.isEmpty) new Optional(null) else new Optional($mapped)
+      $tempDef
+      if ($tempSym.isEmpty) new Optional(null) else new Optional($mapped)
     """
   }
 
