@@ -35,8 +35,7 @@ object MyBuild extends Build {
     "core",
     file("core"),
     settings = buildSettings ++ Seq(
-      scalacOptions += "-optimize",
-      scalacOptions += "-Yshow-syms"
+      scalacOptions += "-optimize"
     )
   ) dependsOn(macros)
 }
