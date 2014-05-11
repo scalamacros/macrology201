@@ -31,6 +31,7 @@ class OptionalMacros(val c: Context) {
     val tempDef = valDef(tempSym, changeOwner(prefix, enclosingOwner, tempSym))
 
     val q"($inlinee => $body)" = f
+    changeOwner(body, f.symbol, enclosingOwner)
     val mapped = typingTransform(body)((tree, api) => tree match {
       case Ident(_) if tree.symbol == inlinee.symbol =>
         api.typecheck(q"$tempSym.value")
