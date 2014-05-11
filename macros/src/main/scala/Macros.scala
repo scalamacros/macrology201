@@ -8,24 +8,30 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def get: A = value
   def isEmpty = value == null
   def getOrElse[B >: A](alt: => B): B = macro OptionalMacros.getOrElse
+  def map[B >: Null](f: A => B): Optional[B] = macro OptionalMacros.map
   override def toString = if (isEmpty) "<empty>" else s"$value"
 }
 
 class OptionalMacros(val c: Context) {
+  import c.universe._
+  val q"$prefix.$_[..$_](..$args)" = c.macroApplication
+  val temp = c.freshName(TermName("temp"))
+
   def getOrElse(alt: c.Tree): c.Tree = {
-    import c.universe._
-    val q"$prefix.$_[..$_](..$args)" = c.macroApplication
-    val temp = c.freshName(TermName("temp"))
     q"""
       val $temp = ${splicer(prefix)}
       if ($temp.isEmpty) $alt else $temp.value
     """
   }
 
+  def map(f: c.Tree): c.Tree = {
+    ???
+  }
+
   // inspired by https://gist.github.com/retronym/10640845#file-macro2-scala
   // check out the gist for a detailed explanation of the technique
   private def splicer(tree: c.Tree): c.Tree = {
-    import c.universe._, c.internal._, decorators._
+    import c.internal._, decorators._
     tree.updateAttachment(macroutil.OrigOwnerAttachment(enclosingOwner))
     q"_root_.macroutil.Splicer.changeOwner($tree)"
   }

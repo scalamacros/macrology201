@@ -2,7 +2,8 @@ class C { override def toString = "C" }
 
 object Test {
   def main(args: Array[String]): Unit = {
-    def foo(x: => Optional[C]) = x
-    println(foo({ lazy val y = new Optional(null); y }).getOrElse(new C))
+    val x1 = new Optional(new C)
+    val x2 = x1.map(_.toString)
+    println(x2)
   }
 }
