@@ -25,7 +25,20 @@ class OptionalMacros(val c: Context) {
   }
 
   def map(f: c.Tree): c.Tree = {
-    ???
+    val q"($inlinee => $body)" = f
+    object inliner extends Transformer {
+      override def transform(tree: Tree): Tree = tree match {
+        case Ident(_) if tree.symbol == inlinee.symbol =>
+          q"$temp"
+        case _ =>
+          super.transform(tree)
+      }
+    }
+    val mapped = inliner.transform(body)
+    q"""
+      val $temp = ${splicer(prefix)}
+      if ($temp.isEmpty) new Optional(null) else new Optional($mapped)
+    """
   }
 
   // inspired by https://gist.github.com/retronym/10640845#file-macro2-scala
