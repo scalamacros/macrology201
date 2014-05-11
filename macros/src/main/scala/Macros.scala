@@ -15,16 +15,30 @@ class OptionalMacros(val c: Context) {
   def getOrElse(alt: c.Tree): c.Tree = {
     import c.universe._
     val q"$prefix.$_[..$_](..$args)" = c.macroApplication
-    val tempName = c.freshName(TermName("temp"))
-
-    import c.internal._
-    import decorators._
-    val tempSym = enclosingOwner.newTermSymbol(tempName).setInfo(prefix.tpe)
-    val tempDef = valDef(tempSym, changeOwner(prefix, enclosingOwner, tempSym))
-
+    val temp = c.freshName(TermName("temp"))
     q"""
-      $tempDef
-      if ($tempSym.isEmpty) $alt else $tempSym.value
+      val $temp = ${splicer(prefix)}
+      if ($temp.isEmpty) $alt else $temp.value
     """
+  }
+
+  // inspired by https://gist.github.com/retronym/10640845#file-macro2-scala
+  // check out the gist for a detailed explanation of the technique
+  private def splicer(tree: c.Tree): c.Tree = {
+    import c.universe._, c.internal._, decorators._
+    tree.updateAttachment(macroutil.OrigOwnerAttachment(enclosingOwner))
+    q"_root_.macroutil.Splicer.changeOwner($tree)"
+  }
+}
+
+package macroutil {
+  case class OrigOwnerAttachment(sym: Any)
+  object Splicer {
+    def impl(c: Context)(tree: c.Tree): c.Tree = {
+      import c.universe._, c.internal._, decorators._
+      val origOwner = tree.attachments.get[OrigOwnerAttachment].map(_.sym).get.asInstanceOf[Symbol]
+      c.internal.changeOwner(tree, origOwner, c.internal.enclosingOwner)
+    }
+    def changeOwner[A](tree: A): A = macro impl
   }
 }
