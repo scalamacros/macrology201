@@ -1,27 +1,38 @@
-### Macros are awesome!
+### Step-by-step walkthrough of part 1
 
-[http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf](http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf)
+[/commits/part1](../../commits/part1)
 
-### So let's go write some :)
+### Summary of part 1
 
-  * This workshop is a down-to-earth live coding session
-  * No philosophical discussions: for that check out ["Macros vs Types"](http://scalamacros.org/paperstalks/2014-03-01-MacrosVsTypes.pdf) and ["Philosophy of Scala Macros"](http://scalamacros.org/paperstalks/2013-09-19-PhilosophyOfScalaMacros.pdf)
-  * No plans for the future: for that check out ["Rethinking Scala Macros"](http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf) and the upcoming ["Easy Metaprogramming For Everyone"](http://www.scaladays.org/#schedule/Easy-Metaprogramming-For-Everyone-)
+Inspired by the work of Adam Rosenberger in [nalloc](https://github.com/arosenberger/nalloc), we've sketched a macro-powered zero-overhead option-like class. Thanks to macros, both Adam and us have been able to provide high-order combinators `getOrElse` and `map` that get compiled down to first-order code.
 
-### Our plan for today
+```
+final class Optional[+A >: Null](val value: A) extends AnyVal {
+  def get: A = value
+  def isEmpty = value == null
+  def getOrElse[B >: A](alt: => B): B = macro OptionalMacros.getOrElse
+  def map[B](f: A => B): Optional[B] = macro OptionalMacros.map
+  override def toString = if (isEmpty) "<empty>" else s"$value"
+}
+```
 
-  * Macro-based optimizers
-  * Implicit materializers
+### Basic macrology
 
-We'll be using Scala 2.11.x with all the new goodies including quasiquotes and macro bundles, but we'll also spend some time discussing 2.10.x compatibility.
+  * [https://github.com/scalamacros/sbt-example](https://github.com/scalamacros/sbt-example) provides a nice template to get a macro project started.
+  * Use macro bundles and quasiquotes - they significantly simplify writing macros.
+  * Know your debugging tools: `showCode`, `showRaw`, `-Xprint:typer` and other compiler flags. In the meanwhile we'll be working on IDE integration and other improvements to developer experience.
+  * Careful with control flow (preserve evaluation order, be sure to cache values of macro arguments if they are used multiple times in expansions)
+  * Mind hygiene (use `c.freshName` when generating local variables, when possible use `_root_`-qualified names to refer to external dependencies). This is something that we hope to do automatically in the future, but for now hygiene needs your attention.
+  * Most of what we've seen here applies to Scala 2.10, except for macro bundles, relaxed signatures for macro impls and `showCode`, which require Scala 2.11. Quasiquotes aren't shipping with official Scala 2.10, but they are provided by [the macro paradise plugin](http://docs.scala-lang.org/overviews/macros/paradise.html).
 
-### Things that we'll leave out
+### Advanced macrology
 
-  * Macro-based languge virtualization that was elaborated on in ["Yin-Yang: Transparent Deep Embedding of DSLs"](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.308.880) and ["An Embedded Query Language in Scala"](https://github.com/amirsh/master-thesis)
-  * Type providers that were outlined in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true) and [the accompanying code repository for that talk](https://github.com/travisbrown/type-provider-examples)
-  * Macro annotations that were also presented in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true)
-  * String interpolation macros that will be covered at ScalaDays: ["Quote Or Be Quoted"](http://www.scaladays.org/#schedule/Quote-or-be-quoted)
+  * Make sure that your macro isn't susceptible to owner chain corruptions. A good way to test that is to pass owner-chain sensitive tree shapes in its prefix and arguments (see provided tests for a simple yet characteristic tree shape).
+  * If your macro crashes in GenICode or LambdaLift, it's most likely owner chain corruption, and you need to do `c.internal.changeOwner`.
+  * If your macro crashes in RefChecks, then it's probably an unsupported kind of mix of typed and untyped trees, and you need to go for `c.internal.typingTransform`.
+  * All this applies equally to both 2.10 and 2.11. However, `c.internal` only exists in 2.11, on 2.10 you'll have to cast your way to `scala.tools.nsc.Global` - both techniques are demonstrated in the accompanying code.
+  * We're working on making all these advanced recipes unnecessary, but there's still a long way to go.
 
-### Let's get started!
+### Let's keep on moving!
 
-Macro-based optimizers, hygiene and owner chains: [/tree/part1](../../tree/part1)
+Materialization, reflection and blackbox/whitebox macros: [/tree/part2](../../tree/part2).
