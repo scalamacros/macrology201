@@ -15,11 +15,16 @@ class OptionalMacros(val c: Context) {
   def getOrElse(alt: c.Tree): c.Tree = {
     import c.universe._
     val q"$prefix.$_[..$_](..$args)" = c.macroApplication
-    val temp = c.freshName(TermName("temp"))
-    val result = q"""
-      val $temp = $prefix
-      if ($temp.isEmpty) $alt else $temp.value
+    val tempName = c.freshName(TermName("temp"))
+
+    import c.internal._
+    import decorators._
+    val tempSym = enclosingOwner.newTermSymbol(tempName).setInfo(prefix.tpe)
+    val tempDef = valDef(tempSym, changeOwner(prefix, enclosingOwner, tempSym))
+
+    q"""
+      $tempDef
+      if ($tempSym.isEmpty) $alt else $tempSym.value
     """
-    c.untypecheck(result)
   }
 }
