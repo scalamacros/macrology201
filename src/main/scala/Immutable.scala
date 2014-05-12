@@ -3,7 +3,7 @@ package immutable
 import language.experimental.macros
 import scala.reflect.macros.whitebox.Context
 
-trait Immutable[-T]
+trait Immutable[T]
 object Immutable {
   def is[T]: Boolean = macro isImpl[T]
   def isImpl[T: c.WeakTypeTag](c: Context) = {
@@ -19,8 +19,8 @@ object Immutable {
     q"null"
   }
 
-  implicit def materialize[T: InvariantDummy]: Immutable[T] = macro materializeImpl[T]
-  def materializeImpl[T: c.WeakTypeTag](c: Context)(dummy: c.Tree) = {
+  implicit def materialize[T]: Immutable[T] = macro materializeImpl[T]
+  def materializeImpl[T: c.WeakTypeTag](c: Context) = {
     import c.universe._, definitions.ArrayClass
     val T = weakTypeOf[T]
     val deps =
@@ -50,14 +50,5 @@ object Immutable {
         $name
       }
     """
-  }
-}
-
-trait InvariantDummy[T]
-object InvariantDummy {
-  implicit def materialize[T]: InvariantDummy[T] = macro materializeImpl[T]
-  def materializeImpl[T: c.WeakTypeTag](c: Context) = {
-    import c.universe._
-    q"null"
   }
 }
