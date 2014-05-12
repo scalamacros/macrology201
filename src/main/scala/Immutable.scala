@@ -15,10 +15,12 @@ object Immutable {
 
   implicit def materialize[T]: Immutable[T] = macro materializeImpl[T]
   def materializeImpl[T: c.WeakTypeTag](c: Context) = {
-    import c.universe._
+    import c.universe._, definitions.ArrayClass
     val T = weakTypeOf[T]
     val deps =
       T.typeSymbol match {
+        case sym if sym == ArrayClass =>
+          c.abort(c.enclosingPosition, "arrays are mutable")
         case sym: ClassSymbol =>
           if (!sym.isFinal && !sym.isSealed && !sym.isModuleClass)
             c.abort(c.enclosingPosition, "open classes are not guaranteed to be immutable")

@@ -70,4 +70,21 @@ class ImmutableSuite extends FunSuite {
     def f[T <: C] = Immutable.is[T]
     assert(f)
   }
+
+  test("arrays are not immutable") {
+    assert(!Immutable.is[Array[Int]])
+  }
+
+  test("primitives are immutable") {
+    implicitly[Immutable[Byte]]
+    implicitly[Immutable[Short]]
+    implicitly[Immutable[Int]]
+    implicitly[Immutable[Long]]
+    implicitly[Immutable[Char]]
+    implicitly[Immutable[Float]]
+    implicitly[Immutable[Double]]
+    implicitly[Immutable[Boolean]]
+    implicitly[Immutable[Unit]]
+    implicitly[Immutable[Null]]
+  }
 }
