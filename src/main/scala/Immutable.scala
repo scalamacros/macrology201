@@ -13,6 +13,12 @@ object Immutable {
     q"${inferred.nonEmpty}"
   }
 
+  def collapseToNull[T](evidence: Immutable[T]): Immutable[T] = macro collapseToNullImpl[T]
+  def collapseToNullImpl[T](c: Context)(evidence: c.Tree): c.Tree = {
+    import c.universe._
+    q"null"
+  }
+
   implicit def materialize[T]: Immutable[T] = macro materializeImpl[T]
   def materializeImpl[T: c.WeakTypeTag](c: Context) = {
     import c.universe._, definitions.ArrayClass
@@ -38,9 +44,11 @@ object Immutable {
     val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
     val name = TermName(c.freshName())
     q"""
-      implicit object $name extends Immutable[$T]
-      ..$implicitlies
-      $name
+      Immutable.collapseToNull {
+        implicit object $name extends Immutable[$T]
+        ..$implicitlies
+        $name
+      }
     """
   }
 }
