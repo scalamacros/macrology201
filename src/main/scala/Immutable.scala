@@ -16,6 +16,10 @@ object Immutable {
   implicit def materialize[T]: Immutable[T] = macro materializeImpl[T]
   def materializeImpl[T: c.WeakTypeTag](c: Context) = {
     import c.universe._
-    q"new Immutable[${weakTypeOf[T]}] { }"
+    val T = weakTypeOf[T]
+    T.members.collect { case s: TermSymbol if !s.isMethod =>
+      if (s.isVar) c.abort(c.enclosingPosition, s"$T is not immutable because it has mutable field ${s.name}")
+    }
+    q"new Immutable[$T] { }"
   }
 }
