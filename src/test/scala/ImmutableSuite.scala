@@ -17,4 +17,16 @@ class ImmutableSuite extends FunSuite {
     class C(val x: M)
     assert(!Immutable.is[C])
   }
+
+  test("self recursive class is immutable") {
+    class Recursive(recursive: Recursive)
+    assert(Immutable.is[Recursive])
+  }
+
+  test("mutually recursive classes are immutable") {
+    case class Mutually(rec: Rec)
+    case class Rec(mutually: Mutually)
+    assert(Immutable.is[Mutually])
+    assert(Immutable.is[Rec])
+  }
 }

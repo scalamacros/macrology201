@@ -23,6 +23,11 @@ object Immutable {
         s.typeSignature
       }
     val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
-    q"..$implicitlies; new Immutable[$T] { }"
+    val name = TermName(c.freshName())
+    q"""
+      implicit object $name extends Immutable[$T]
+      ..$implicitlies
+      $name
+    """
   }
 }
