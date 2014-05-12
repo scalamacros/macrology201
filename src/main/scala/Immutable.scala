@@ -41,11 +41,11 @@ object Immutable {
           val TypeBounds(_, high) = sym.info
           high :: Nil
       }
-    val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
+    val implicitlies = deps.map { tpe => q"_root_.scala.Predef.implicitly[_root_.immutable.Immutable[$tpe]]" }
     val name = TermName(c.freshName())
     q"""
-      Immutable.collapseToNull {
-        implicit object $name extends Immutable[$T]
+      _root_.immutable.Immutable.collapseToNull {
+        implicit object $name extends _root_.immutable.Immutable[$T]
         ..$implicitlies
         $name
       }
