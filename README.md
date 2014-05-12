@@ -6,7 +6,7 @@
 
   * This workshop is a down-to-earth live coding session
   * No philosophical discussions: for that check out ["Macros vs Types"](http://scalamacros.org/paperstalks/2014-03-01-MacrosVsTypes.pdf) and ["Philosophy of Scala Macros"](http://scalamacros.org/paperstalks/2013-09-19-PhilosophyOfScalaMacros.pdf)
-  * No plans for the future: for that check out ["Rethinking Scala Macros"](http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf)  * No plans for the future: for that check out ["Rethinking Scala Macros"](http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf) and the upcoming ["Easy Metaprogramming For Everyone"](http://www.scaladays.org/#schedule/Easy-Metaprogramming-For-Everyone-)
+  * No plans for the future: for that check out ["Rethinking Scala Macros"](http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf) and the upcoming ["Easy Metaprogramming For Everyone"](http://www.scaladays.org/#schedule/Easy-Metaprogramming-For-Everyone-)
 
 ### Our plan for today
 
@@ -21,3 +21,7 @@ We'll be using Scala 2.11.x with all the new goodies including quasiquotes and m
   * Type providers that were outlined in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true) and [the accompanying code repository for that talk](https://github.com/travisbrown/type-provider-examples)
   * Macro annotations that were also presented in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true)
   * String interpolation macros that will be covered at ScalaDays: ["Quote Or Be Quoted"](http://www.scaladays.org/#schedule/Quote-or-be-quoted)
+
+### Let's get started!
+
+Macro-based optimizers, hygiene and owner chains: [/tree/part1](../../tree/part1)
