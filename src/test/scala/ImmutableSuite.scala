@@ -87,4 +87,9 @@ class ImmutableSuite extends FunSuite {
     implicitly[Immutable[Unit]]
     implicitly[Immutable[Null]]
   }
+
+  test("whitelisted collection.immutable.List is immutable") {
+    implicit def whitelistList[T: Immutable]: Immutable[collection.immutable.List[T]] = null
+    assert(Immutable.is[List[Int]])
+  }
 }
