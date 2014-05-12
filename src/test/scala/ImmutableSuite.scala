@@ -3,37 +3,42 @@ import org.scalatest.FunSuite
 
 class ImmutableSuite extends FunSuite {
   test("dummy class is immutable") {
-    class Dummy
+    final class Dummy
     assert(Immutable.is[Dummy])
   }
 
   test("class with var is not immutable") {
-    class C(var x: Int)
+    final class C(var x: Int)
     assert(!Immutable.is[C])
   }
 
   test("class with field that is of mutable is mutable") {
-    class M(var x: Int)
-    class C(val x: M)
+    final class M(var x: Int)
+    final class C(val x: M)
     assert(!Immutable.is[C])
   }
 
   test("self recursive class is immutable") {
-    class Recursive(recursive: Recursive)
+    final class Recursive(recursive: Recursive)
     assert(Immutable.is[Recursive])
   }
 
   test("mutually recursive classes are immutable") {
-    case class Mutually(rec: Rec)
-    case class Rec(mutually: Mutually)
+    final case class Mutually(rec: Rec)
+    final case class Rec(mutually: Mutually)
     assert(Immutable.is[Mutually])
     assert(Immutable.is[Rec])
   }
 
   test("polymorphic class might or might not be immutable") {
-    class M(var x: Int)
-    class C[T](val x: T)
+    final class M(var x: Int)
+    final class C[T](val x: T)
     assert(Immutable.is[C[Int]])
     assert(!Immutable.is[C[M]])
+  }
+
+  test("open class might not be immutable") {
+    class C
+    assert(!Immutable.is[C])
   }
 }
