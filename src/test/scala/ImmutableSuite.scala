@@ -29,4 +29,11 @@ class ImmutableSuite extends FunSuite {
     assert(Immutable.is[Mutually])
     assert(Immutable.is[Rec])
   }
+
+  test("polymorphic class might or might not be immutable") {
+    class M(var x: Int)
+    class C[T](val x: T)
+    assert(Immutable.is[C[Int]])
+    assert(!Immutable.is[C[M]])
+  }
 }

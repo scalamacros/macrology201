@@ -20,7 +20,7 @@ object Immutable {
     val deps =
       T.members.collect { case s: TermSymbol if !s.isMethod =>
         if (s.isVar) c.abort(c.enclosingPosition, s"$T is not immutable because it has mutable field ${s.name}")
-        s.typeSignature
+        s.typeSignatureIn(T)
       }
     val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
     val name = TermName(c.freshName())
