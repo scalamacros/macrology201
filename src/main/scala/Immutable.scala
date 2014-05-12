@@ -29,6 +29,9 @@ object Immutable {
               s.typeSignatureIn(T)
             }
           childTpes ++ fieldTpes
+        case sym: TypeSymbol =>
+          val TypeBounds(_, high) = sym.info
+          high :: Nil
       }
     val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
     val name = TermName(c.freshName())

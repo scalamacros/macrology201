@@ -59,8 +59,15 @@ class ImmutableSuite extends FunSuite {
 
   test("sealed hierarchies are immutable if every class is immutable") {
     sealed class C
-    final class A(val x: Int) extends C
+    final class A extends C
     assert(Immutable.is[C])
     assert(Immutable.is[A])
+  }
+
+  test("type variable bounded by immutable type is immutable") {
+    sealed class C
+    final class A extends C
+    def f[T <: C] = Immutable.is[T]
+    assert(f)
   }
 }
