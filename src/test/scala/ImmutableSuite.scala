@@ -11,4 +11,10 @@ class ImmutableSuite extends FunSuite {
     class C(var x: Int)
     assert(!Immutable.is[C])
   }
+
+  test("class with field that is of mutable is mutable") {
+    class M(var x: Int)
+    class C(val x: M)
+    assert(!Immutable.is[C])
+  }
 }
