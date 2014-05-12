@@ -56,4 +56,11 @@ class ImmutableSuite extends FunSuite {
     final class C { object O { val x: Int = 0 } }
     assert(Immutable.is[C])
   }
+
+  test("sealed hierarchies are immutable if every class is immutable") {
+    sealed class C
+    final class A(val x: Int) extends C
+    assert(Immutable.is[C])
+    assert(Immutable.is[A])
+  }
 }

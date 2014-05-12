@@ -20,12 +20,15 @@ object Immutable {
     val deps =
       T.typeSymbol match {
         case sym: ClassSymbol =>
-          if (!sym.isFinal && !sym.isModuleClass)
+          if (!sym.isFinal && !sym.isSealed && !sym.isModuleClass)
             c.abort(c.enclosingPosition, "open classes are not guaranteed to be immutable")
-          T.members.collect { case s: TermSymbol if !s.isMethod =>
-            if (s.isVar) c.abort(c.enclosingPosition, s"$T is not immutable because it has mutable field ${s.name}")
-            s.typeSignatureIn(T)
-          }
+          val childTpes = sym.knownDirectSubclasses.toList.map { case sub: ClassSymbol => sub.toType }
+          val fieldTpes =
+            T.members.collect { case s: TermSymbol if !s.isMethod =>
+              if (s.isVar) c.abort(c.enclosingPosition, s"$T is not immutable because it has mutable field ${s.name}")
+              s.typeSignatureIn(T)
+            }
+          childTpes ++ fieldTpes
       }
     val implicitlies = deps.map { tpe => q"implicitly[Immutable[$tpe]]" }
     val name = TermName(c.freshName())
