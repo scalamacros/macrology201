@@ -41,4 +41,19 @@ class ImmutableSuite extends FunSuite {
     class C
     assert(!Immutable.is[C])
   }
+
+  test("objects with immutable fields are immutable") {
+    object O { val x: Int = 0 }
+    assert(Immutable.is[O.type])
+  }
+
+  test("objects with mutable fields are mutable") {
+    object O { var x: Int = 0 }
+    assert(!Immutable.is[O.type])
+  }
+
+  test("class with nested object can be in immutable") {
+    final class C { object O { val x: Int = 0 } }
+    assert(Immutable.is[C])
+  }
 }

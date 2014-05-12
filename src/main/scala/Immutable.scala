@@ -20,7 +20,7 @@ object Immutable {
     val deps =
       T.typeSymbol match {
         case sym: ClassSymbol =>
-          if (!sym.isFinal)
+          if (!sym.isFinal && !sym.isModuleClass)
             c.abort(c.enclosingPosition, "open classes are not guaranteed to be immutable")
           T.members.collect { case s: TermSymbol if !s.isMethod =>
             if (s.isVar) c.abort(c.enclosingPosition, s"$T is not immutable because it has mutable field ${s.name}")
