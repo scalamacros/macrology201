@@ -1,6 +1,6 @@
 ### Macros are awesome!
 
-[http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf](http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf)
+[http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf](https://web.archive.org/web/20180713220534/http://scalamacros.org/paperstalks/2014-02-04-WhatAreMacrosGoodFor.pdf)
 
 ### So let's go write some :)
 
