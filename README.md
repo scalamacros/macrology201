@@ -5,8 +5,8 @@
 ### So let's go write some :)
 
   * This workshop is a down-to-earth live coding session
-  * No philosophical discussions: for that check out ["Macros vs Types"](http://scalamacros.org/paperstalks/2014-03-01-MacrosVsTypes.pdf) and ["Philosophy of Scala Macros"](http://scalamacros.org/paperstalks/2013-09-19-PhilosophyOfScalaMacros.pdf)
-  * No plans for the future: for that check out ["Rethinking Scala Macros"](http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf) and the upcoming ["Easy Metaprogramming For Everyone"](http://www.scaladays.org/#schedule/Easy-Metaprogramming-For-Everyone-)
+  * No philosophical discussions: for that check out ["Macros vs Types"](https://web.archive.org/web/20180713220542/http://scalamacros.org/paperstalks/2014-03-01-MacrosVsTypes.pdf) and ["Philosophy of Scala Macros"](https://web.archive.org/web/20180713220525/http://scalamacros.org/paperstalks/2013-09-19-PhilosophyOfScalaMacros.pdf)
+  * No plans for the future: for that check out ["Rethinking Scala Macros"](https://web.archive.org/web/20200513041624/http://scalamacros.org/paperstalks/2014-03-02-RethinkingScalaMacros.pdf) and the upcoming ["Easy Metaprogramming For Everyone"](https://www.youtube.com/watch?v=twokmzbDzqA)
 
 ### Our plan for today
 
