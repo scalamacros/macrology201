@@ -20,7 +20,7 @@ We'll be using Scala 2.11.x with all the new goodies including quasiquotes and m
   * Macro-based languge virtualization that was elaborated on in ["Yin-Yang: Transparent Deep Embedding of DSLs"](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.308.880) and ["An Embedded Query Language in Scala"](https://github.com/amirsh/master-thesis)
   * Type providers that were outlined in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true) and [the accompanying code repository for that talk](https://github.com/travisbrown/type-provider-examples)
   * Macro annotations that were also presented in ["Macro-Based Type Providers in Scala"](https://github.com/travisbrown/type-provider-examples/blob/master/docs/scalar-2014-slides.pdf?raw=true)
-  * String interpolation macros that will be covered at ScalaDays: ["Quote Or Be Quoted"](http://www.scaladays.org/#schedule/Quote-or-be-quoted)
+  * String interpolation macros that will be covered at ScalaDays: ["Quote Or Be Quoted"](https://www.youtube.com/watch?v=_c6SMsZNxms)
 
 ### Let's get started!
 
